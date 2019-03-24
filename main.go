@@ -17,7 +17,7 @@ type Book struct {
 
 // DB migration
 func dbInit() {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbInit())")
@@ -27,7 +27,7 @@ func dbInit() {
 
 // DB Create
 func dbInsert(title string, price int) {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbInsert())")
@@ -37,7 +37,7 @@ func dbInsert(title string, price int) {
 
 // DB Update
 func dbUpdate(id int, title string, price int) {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbUpdate())")
@@ -51,7 +51,7 @@ func dbUpdate(id int, title string, price int) {
 
 // DB Delete
 func dbDelete(id int) {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbDelete())")
@@ -63,7 +63,7 @@ func dbDelete(id int) {
 
 // DB All Get
 func dbGetAll() []Book {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbGetAll())")
@@ -75,7 +75,7 @@ func dbGetAll() []Book {
 
 // DB One Get
 func dbGetOne(id int) Book {
-	db, err := gorm.Open("sqlite3", "books.sqlite3")
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
 	defer db.Close()
 	if err != nil {
 		panic("You can't open DB (dbGetOne())")
@@ -89,6 +89,8 @@ func dbGetOne(id int) Book {
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("views/*.html")
+
+	dbInit()
 
 	//Index
 	router.GET("/", func(c *gin.Context) {

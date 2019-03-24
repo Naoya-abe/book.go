@@ -8,14 +8,13 @@
   </head>
   <body>
     <header>
-      <h1>本棚</h1>
+      <h1>Bookshelf</h1>
     </header>
     <div class="wrap">
-      <h2>追加</h2>
       <div class="input">
         <form action="/new" method="post">
           <p>
-            Title<input
+            Title : <input
               type="text"
               name="title"
               size="30"
@@ -23,22 +22,25 @@
             />
           </p>
           <p>
-            Price<input 
+            Price : <input 
               type="text" 
               name="price" 
               size="30" 
               placeholder="値段" />
           </p>
+          <input type="submit" value="追加">
         </form>
+        <p>合計金額</p>
       </div>
       <div class="indexGet">
         <ul>
-          { range .books}
+          {{ range .books}}
           <li>
             タイトル：{{.Title}}、値段:{{.Price}}
             <label><a href="/edit/:id">編集</a></label>
             <label><a href="/delete/:id">削除</a></label>
           </li>
+          {{end}}
         </ul>
       </div>
     </div>
