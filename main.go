@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -70,7 +72,7 @@ func dbGetAll() []Book {
 }
 
 // DB One Get
-func dbGetOne(id int, title string, price int) {
+func dbGetOne(id int) Book {
 	db, err := gorm.Open("sqlite3", "books.sqlite3")
 	defer db.Close()
 	if err != nil {
@@ -79,10 +81,69 @@ func dbGetOne(id int, title string, price int) {
 	var book Book
 	db.First(&book, id)
 	db.Close()
+	return book
 }
 
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("views/*.html")
 
+	//Index
+	router.GET("/", func(c *gin.Context) {
+		books := dbGetAll()
+		c.HTML(200, "index.html", gin.H{"books": books})
+	})
+
+	//Create
+	router.POST("/new", func(c *gin.Context) {
+		title := c.PostForm("title")
+		p := c.PostForm("price")
+		price, err := strconv.Atoi(p)
+		if err != nil {
+			panic(err)
+		}
+		dbInsert(title, price)
+		c.Redirect(302, "/")
+	})
+
+	//Edit
+	router.GET("/edit/:id", func(c *gin.Context) {
+		n := c.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		book := dbGetOne(id)
+		c.HTML(200, "edit.html", gin.H{"book": book})
+	})
+
+	//Update
+	router.POST("/update/:id", func(c *gin.Context) {
+		n := c.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		title := c.PostForm("title")
+		p := c.PostForm("price")
+		price, errPrice := strconv.Atoi(p)
+		if errPrice != nil {
+			panic(errPrice)
+		}
+		dbUpdate(id, title, price)
+		c.Redirect(302, "/")
+	})
+
+	//delete
+	router.POST("/delete/:id", func(c *gin.Context) {
+		n := c.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		dbDelete(id)
+		c.Redirect(302, "/")
+	})
+
+	router.Run()
 }
