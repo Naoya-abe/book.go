@@ -149,5 +149,16 @@ func main() {
 		c.Redirect(302, "/")
 	})
 
+	//delete_confirm
+	router.GET("/delete_confirm/:id", func(c *gin.Context) {
+		n := c.Param("id")
+		id, err := strconv.Atoi(n)
+		if err != nil {
+			panic(err)
+		}
+		book := dbGetOne(id)
+		c.HTML(200, "delete.html", gin.H{"book": book})
+	})
+
 	router.Run()
 }

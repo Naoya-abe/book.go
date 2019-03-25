@@ -23,9 +23,9 @@
         <ul>
           {{range.books}}
           <li>
-            Title：{{.Title}}、Price：{{.Price}}
+            Title:{{.Title}}、Price:{{.Price}}
             <label><a href="/edit/{{.ID}}">編集</a></label>
-            <label><a href="/delete/{{.ID}}">削除</a></label>
+            <label><a href="/delete_confirm/{{.ID}}">削除</a></label>
           </li>
           {{end}}
         </ul>
