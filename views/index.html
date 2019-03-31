@@ -17,9 +17,10 @@
           <p>Price :<input type="text" name="price" size="30" placeholder="値段" /></p>
           <p><input type="submit" value="Send" /></p>
         </form>
-        <p>合計金額</p>
       </div>
       <div class="indexGet">
+        <p>本の数 : {{.num}}</p>
+        <p>合計金額 : {{.sumPrice}}</p>
         <ul>
           {{range.books}}
           <li>

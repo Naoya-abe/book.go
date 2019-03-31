@@ -15,6 +15,10 @@ type Book struct {
 	Price int
 }
 
+type Result struct {
+	Total int
+}
+
 // DB migration
 func dbInit() {
 	db, err := gorm.Open("sqlite3", "book.sqlite3")
@@ -82,8 +86,29 @@ func dbGetOne(id int) Book {
 	}
 	var book Book
 	db.First(&book, id)
-	db.Close()
 	return book
+}
+
+func dbGetNum() int {
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
+	defer db.Close()
+	if err != nil {
+		panic("You can't open DB (dbGetNum())")
+	}
+	var num int
+	db.Table("books").Count(&num)
+	return num
+}
+
+func dbGetPrice() Result {
+	db, err := gorm.Open("sqlite3", "book.sqlite3")
+	defer db.Close()
+	if err != nil {
+		panic("You can't open DB (dbGetPrice())")
+	}
+	var result Result
+	db.Table("books").Select("sum(price) as total").Scan(&result)
+	return result
 }
 
 func main() {
@@ -95,7 +120,9 @@ func main() {
 	//Index
 	router.GET("/", func(c *gin.Context) {
 		books := dbGetAll()
-		c.HTML(200, "index.html", gin.H{"books": books})
+		num := dbGetNum()
+		sumPrice := dbGetPrice()
+		c.HTML(200, "index.html", gin.H{"books": books, "num": num, "sumPrice": sumPrice.Total})
 	})
 
 	//Create
